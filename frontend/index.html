@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NephroScan AI | Détection de calculs rénaux</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <div class="particles"></div>
+    <div class="glow-orb"></div>
+
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+              />
+            </svg>
+          </div>
+          <span class="logo-text"
+            >NephroScan<span class="highlight">AI</span></span
+          >
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          AI Ready
+        </div>
+      </div>
+
+      <div class="hero">
+        <h1>Détection de<span class="gradient-text"> calculs rénaux</span></h1>
+        <p>
+          Analyse instantanée par intelligence artificielle<br />Précision
+          diagnostique avancée
+        </p>
+      </div>
+
+      <div class="scan-card" id="scanCard">
+        <div class="scan-area" id="uploadArea">
+          <div class="scan-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5 5 5-5M12 4v10"
+              />
+            </svg>
+          </div>
+          <p class="scan-text">Déposez votre image médicale ici</p>
+          <p class="scan-subtext">PNG, JPG, JPEG — Max 10MB</p>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            style="display: none"
+          />
+        </div>
+        <div id="preview" class="preview hidden"></div>
+      </div>
+
+      <div class="action-bar">
+        <button id="newImageBtn" class="btn-secondary" style="display: none">
+          <span class="btn-icon">📷</span>
+          <span class="btn-text">Nouvelle image</span>
+        </button>
+        <button id="predictBtn" class="btn-primary" disabled>
+          <span class="btn-text">Lancer l'analyse</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+
+      <div id="results" class="results-card hidden">
+        <div class="results-header">
+          <div class="results-title">
+            <span class="pulse-dot"></span>
+            Rapport d'analyse
+          </div>
+          <div class="confidence-badge" id="confidenceBadge">Confiance</div>
+        </div>
+        <div class="results-content" id="resultsContent">
+          <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Analyse en cours...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <h4>Analyse instantanée</h4>
+          <p>Résultats en moins de 2 secondes</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <h4>Précision 98%</h4>
+          <p>Modèle entraîné sur 1300+ images</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🛡️</div>
+          <h4>Données sécurisées</h4>
+          <p>Traitement local anonymisé</p>
+        </div>
+      </div>
+    </div>
+    <!-- Barre de progression -->
+    <div id="progressOverlay" class="progress-overlay">
+      <div class="progress-container">
+        <div class="progress-title">Analyse en cours</div>
+
+        <div class="progress-steps">
+          <div class="progress-step" id="stepUpload">
+            <div class="step-icon">📤</div>
+            <div class="step-text">
+              <div class="step-name">Téléchargement</div>
+              <div class="step-desc">Envoi de l'image au serveur</div>
+            </div>
+          </div>
+
+          <div class="progress-step" id="stepPreprocess">
+            <div class="step-icon">🔧</div>
+            <div class="step-text">
+              <div class="step-name">Prétraitement</div>
+              <div class="step-desc">Optimisation de l'image</div>
+            </div>
+          </div>
+
+          <div class="progress-step" id="stepAnalysis">
+            <div class="step-icon">🧠</div>
+            <div class="step-text">
+              <div class="step-name">Analyse IA</div>
+              <div class="step-desc">Détection des calculs rénaux</div>
+            </div>
+          </div>
+
+          <div class="progress-step" id="stepResults">
+            <div class="step-icon">📊</div>
+            <div class="step-text">
+              <div class="step-name">Génération</div>
+              <div class="step-desc">Préparation des résultats</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+
+        <div class="progress-percentage" id="progressPercentage">0%</div>
+        <div class="progress-message" id="progressMessage">Préparation...</div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastNotification" class="toast-notification">
+      <div class="toast-icon" id="toastIcon"></div>
+      <div class="toast-message" id="toastMessage"></div>
+    </div>
+
+    <script src="script.js"></script>   
+
+   <!-- <script src="js/main.js"></script>     
+    <script src="js/progress.js"></script> 
+    <script src="js/zoom.js"></script>     
+    <script src="js/drawing.js"></script>   
+    <script src="js/upload.js"></script>    
+    <script src="js/results.js"></script>    
+    <script src="js/share.js"></script>    
+    <script src="js/pdf.js"></script>    -->
+  </body>
+</html>

@@ -1,0 +1,37 @@
+﻿# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Models (heavy)
+*.pt
+*.pth
+*.onnx
+*.h5
+models/
+
+# Data (images, labels) — mais garde data.yaml
+data/
+!data/data.yaml
+
+# Uploads temporaires
+uploads/
+temp_uploads/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
