@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/predict';
+const API_URL = `${window.location.origin}/predict`;
 
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
@@ -588,6 +588,8 @@ predictBtn.addEventListener('click', async () => {
             const totalPercent = Math.round(percent * 0.3);
             updateProgress('upload', totalPercent, `Téléchargement... ${percent}%`);
         });
+        console.log('Réponse brute API:', data);  
+
         
         updateProgress('upload', 30, 'Téléchargement terminé !');
         await new Promise(r => setTimeout(r, 300));
@@ -610,7 +612,8 @@ predictBtn.addEventListener('click', async () => {
             updateProgress('analysis', 85, `✓ ${data.count} calcul(s) détecté(s)`);
             await new Promise(r => setTimeout(r, 400));
         } else {
-            throw new Error('Erreur API');
+            console.error('Erreur API détaillée:', data.error);
+            throw new Error(data.error || 'Erreur API'); 
         }
         
         updateProgress('results', 90, 'Génération du rapport...');
@@ -625,13 +628,13 @@ predictBtn.addEventListener('click', async () => {
         
     } catch (error) {
         console.error('Erreur:', error);
-        showToast('Erreur de connexion au serveur. Vérifiez que l\'API est lancée', 'error');
+        showToast('Erreur de connexion au serveur. Réessayez dans un instant.', 'error');
         
         resultsContent.innerHTML = `
             <div class="detection-result">
                 <div class="detection-icon">⚠️</div>
                 <div class="detection-title">Erreur de connexion</div>
-                <div class="detection-desc">Vérifiez que l'API est lancée sur http://localhost:8000</div>
+                <div class="detection-desc">Le service d'analyse est temporairement indisponible. Réessayez.</div>
                 <div class="detection-badges">
                     <span class="badge">API Status: Offline</span>
                 </div>

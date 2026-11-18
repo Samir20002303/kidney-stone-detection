@@ -11,16 +11,21 @@ env/
 __pycache__/
 *.pyc
 
-# Models (heavy)
-*.pt
+# Heavy model artifacts — keep the production weight
 *.pth
 *.onnx
 *.h5
-models/
+*.pt
+!models/production/best.pt
 
-# Data (images, labels) — mais garde data.yaml
-data/
-!data/data.yaml
+models/baseline/
+models/kidney_stone_cpu/
+models/kidney_stone_detector/
+
+# Dataset images
+data/train/
+data/valid/
+data/test/
 
 # Uploads temporaires
 uploads/

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+﻿from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from ultralytics import YOLO
@@ -13,7 +13,10 @@ import numpy as np
 
 from datetime import datetime
 
-MODEL_PATH = r"C:\Users\ASUS\Documents\kidney-stone-detection\models\baseline\weights\best.pt"
+MODEL_PATH = os.getenv(
+    "MODEL_PATH",
+    os.path.join(os.path.dirname(__file__), "..", "models", "production", "best.pt"),
+)
 model = None
 
 # Seuil de confiance minimum (filtre les faux positifs)
